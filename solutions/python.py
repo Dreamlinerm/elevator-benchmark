@@ -14,8 +14,6 @@ class Elevator:
         self.on_floor = on_floor
         self.door_status: bool = door_status == "c"
 
-        self.output = ""
-
     def process_chunk(self, chunk):
         for instruction in chunk:
             self.process_instruction(instruction)
@@ -33,30 +31,18 @@ class Elevator:
     def move_up(self):
         if self.door_status and self.on_floor < self.floor_max:
             self.on_floor += 1
-            self.output += str(self.on_floor)
-        else:
-            self.output += "f"
 
     def move_down(self):
         if self.door_status and self.on_floor > self.floor_min:
             self.on_floor -= 1
-            self.output += str(self.on_floor)
-        else:
-            self.output += "f"
 
     def open_door(self):
         if self.door_status:
             self.door_status = False
-            self.output += "o"
-        else:
-            self.output += "f"
 
     def close_door(self):
         if not self.door_status:
             self.door_status = True
-            self.output += "c"
-        else:
-            self.output += "f"
 
 
 chunk_size = 100_000  # Adjust the chunk size as needed
@@ -69,4 +55,4 @@ with open("input.txt", "r") as file:
             break
         el.process_chunk(chunk)
     with open("output.txt", "w") as output_file:
-        output_file.write(el.output)
+        output_file.write(str(el.on_floor) + " " + str(el.door_status))
