@@ -12,8 +12,6 @@ class Elevator {
     this.floor_max = floor_max;
     this.on_floor = on_floor;
     this.door_status = door_status === "c";
-
-    this.output = "";
   }
 
   processChunk(chunk) {
@@ -37,36 +35,24 @@ class Elevator {
   moveUp() {
     if (this.door_status && this.on_floor < this.floor_max) {
       this.on_floor += 1;
-      this.output += this.on_floor;
-    } else {
-      this.output += "f";
     }
   }
 
   moveDown() {
     if (this.door_status && this.on_floor > this.floor_min) {
       this.on_floor -= 1;
-      this.output += this.on_floor;
-    } else {
-      this.output += "f";
     }
   }
 
   openDoor() {
     if (this.door_status) {
       this.door_status = false;
-      this.output += "o";
-    } else {
-      this.output += "f";
     }
   }
 
   closeDoor() {
     if (!this.door_status) {
       this.door_status = true;
-      this.output += "c";
-    } else {
-      this.output += "f";
     }
   }
 }
@@ -84,14 +70,10 @@ const el = new Elevator(0, 10);
 
 readStream.on("data", (chunk) => {
   el.processChunk(chunk);
-  writeStream.write(el.output, (err) => {
-    if (err) throw err;
-  });
-  el.output = ""; // Clear the output after writing
 });
 
 readStream.on("end", () => {
-  writeStream.write(el.output, (err) => {
+  writeStream.write(el.on_floor + " " + el.door_status, (err) => {
     if (err) throw err;
   });
 });
