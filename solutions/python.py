@@ -59,7 +59,7 @@ class Elevator:
             self.output += "f"
 
 
-chunk_size = 1024  # Adjust the chunk size as needed
+chunk_size = 100_000  # Adjust the chunk size as needed
 
 with open("input.txt", "r") as file:
     el = Elevator(0, 10)
