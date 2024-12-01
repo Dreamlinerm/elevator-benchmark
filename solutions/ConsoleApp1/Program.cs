@@ -1,129 +1,47 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
-class Elevator
+namespace ConsoleApp1;
+
+public static class Program
 {
-    private int floorMin;
-    private int floorMax;
-    private int onFloor;
-    private bool doorStatus;
-    public string Output { get; set; }
-
-    public Elevator(int floorMin, int floorMax, int onFloor = 0, string doorStatus = "c")
-    {
-        this.floorMin = floorMin;
-        this.floorMax = floorMax;
-        this.onFloor = onFloor;
-        this.doorStatus = doorStatus == "c";
-        this.Output = string.Empty;
-    }
-
-    public void ProcessChunk(char[] buffer, int charsRead)
-    {
-        for (int i = 0; i < charsRead; i++)
-        {
-            ProcessInstruction(buffer[i]);
-        }
-    }
-
-    private void ProcessInstruction(char instruction)
-    {
-        if (instruction == 'u')
-        {
-            MoveUp();
-        }
-        else if (instruction == 'd')
-        {
-            MoveDown();
-        }
-        else if (instruction == 'o')
-        {
-            OpenDoor();
-        }
-        else if (instruction == 'c')
-        {
-            CloseDoor();
-        }
-    }
-
-    private void MoveUp()
-    {
-        if (doorStatus && onFloor < floorMax)
-        {
-            onFloor += 1;
-            Output += onFloor;
-        }
-        else
-        {
-            Output += "f";
-        }
-    }
-
-    private void MoveDown()
-    {
-        if (doorStatus && onFloor > floorMin)
-        {
-            onFloor -= 1;
-            Output += onFloor;
-        }
-        else
-        {
-            Output += "f";
-        }
-    }
-
-    private void OpenDoor()
-    {
-        if (doorStatus)
-        {
-            doorStatus = false;
-            Output += "o";
-        }
-        else
-        {
-            Output += "f";
-        }
-    }
-
-    private void CloseDoor()
-    {
-        if (!doorStatus)
-        {
-            doorStatus = true;
-            Output += "c";
-        }
-        else
-        {
-            Output += "f";
-        }
-    }
-}
-
-class Program
-{
-    static async Task Main(string[] args)
+    private static async Task Main(string[] args)
     {
         const int bufferSize = 4096; // Adjust the chunk size as needed
-        string inputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\input.txt";
-        string outputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\output.txt";
-
-        using (var readStream = new StreamReader(inputFilePath))
-        using (var writeStream = new StreamWriter(outputFilePath))
+        const string inputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\input.txt";
+        const string outputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\output.txt";
+        var optionsRead = new FileStreamOptions()
         {
-            var el = new Elevator(0, 10);
-            char[] buffer = new char[bufferSize];
-            int charsRead;
-            var memoryBuffer = buffer.AsMemory(0, bufferSize);
-            while ((charsRead = await readStream.ReadAsync(memoryBuffer)) > 0)
-            {
-                el.ProcessChunk(buffer, charsRead);
-                await writeStream.WriteAsync(el.Output);
-                el.Output = string.Empty; // Clear the output after writing
-                                          // Console.WriteLine(el.Output); // Uncomment to see the output in the console
-            }
+            Mode = FileMode.Open,
+            Access = FileAccess.Read,
+            BufferSize = bufferSize,
+            Share = FileShare.Read
+        };
 
-            await writeStream.WriteAsync(el.Output); // Write any remaining output
+        var optionsWrite = new FileStreamOptions()
+        {
+            Mode = FileMode.Create,
+            Access = FileAccess.Write,
+            BufferSize = bufferSize,
+            Share = FileShare.Read
+        };
+
+        using var readStream = new StreamReader(inputFilePath,Encoding.UTF8, false, optionsRead);
+        await using var writeStream = new StreamWriter(outputFilePath, Encoding.UTF8, optionsWrite);
+        var el = new Elevator(0, 10);
+        var buffer = new char[bufferSize];
+        int charsRead;
+        var memoryBuffer = buffer.AsMemory(0, bufferSize);
+        while ((charsRead = await readStream.ReadAsync(memoryBuffer).ConfigureAwait(false)) > 0)
+        {
+            el.ProcessChunk(memoryBuffer.Span[..charsRead]);
+            //await writeStream.WriteAsync(el.Output);
+            //el.Output = string.Empty; // Clear the output after writing
+            // Console.WriteLine(el.Output); // Uncomment to see the output in the console
         }
+
+        await writeStream.WriteAsync(el.DoorStatus.ToString()+el.OnFloor); // Write any remaining output
     }
 }
