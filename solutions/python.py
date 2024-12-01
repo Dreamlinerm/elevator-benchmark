@@ -1,3 +1,6 @@
+import mmap
+
+
 class Elevator:
     """
     Elevator class: represents the elevator
@@ -45,14 +48,14 @@ class Elevator:
             self.door_status = True
 
 
-chunk_size = 100_000  # Adjust the chunk size as needed
-
-with open("input.txt", "r") as file:
+chunk_size = 1_000  # Adjust the chunk size as needed
+with open("input.txt", "r+b") as file:
     el = Elevator(0, 10)
-    while True:
-        chunk = file.read(chunk_size)
-        if not chunk:
-            break
-        el.process_chunk(chunk)
-    with open("output.txt", "w") as output_file:
-        output_file.write(str(el.on_floor) + " " + str(el.door_status))
+    with mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as mm:
+        for i in range(0, len(mm), chunk_size):
+            chunk = mm[i : i + chunk_size]
+            el.process_chunk(chunk.decode("utf-8"))
+
+
+with open("output.txt", "w") as output_file:
+    output_file.write(str(el.on_floor) + " " + str(el.door_status))
