@@ -40,3 +40,20 @@ Output:
 ```
 10fffff1fffffoc0fffff1234offfc34offcoffc
 ```
+
+## Time execution
+
+```bash
+time python python.py
+```
+
+```powershell
+Measure-Command { node js.js }
+```
+
+## Run cpp
+
+```bash
+dotnet build
+dotnet publish -c Release -r win-x64 --self-contained
+```
