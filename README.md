@@ -12,24 +12,31 @@ ReadLargeDataset and parse instructions
 
 ## Additional Information
 
-- minFloor: Number
-- maxFloor: Number
-- InitialFloor: Number
+- floor_min: Number
+- floor_max: Number
+- on_floor: Number
 - InitialDoorStatus: o/c
   
 - Challenge:
   - handling incorrect instructions (e.g. moving up from top floor)
-  - ouputing the correct floor and door status
+  - outputing the correct floor and door status
   - handling a big dataset
 
 
 ## Output format
 
 - Ouput floor moved to: Number
-- Output door status: o/o
+- Output door status: o/c
+- Output invalid instruction: f
 
-## Example Output
+## Examples
 
+Input:
 ```
-0oc1oc2oc0o
+udddcccucccccocddddccuuuuoduucduoducoddc
+```
+
+Output:
+```
+10fffff1fffffoc0fffff1234offfc34offcoffc
 ```
