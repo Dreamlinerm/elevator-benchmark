@@ -108,10 +108,7 @@ class Program
         string inputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\input.txt";
         string outputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\output.txt";
 
-        byte[] fileBytes = File.ReadAllBytes(inputFilePath);
-
-        using (var memoryStream = new MemoryStream(fileBytes))
-        using (var readStream = new StreamReader(memoryStream))
+        using (var readStream = new StreamReader(inputFilePath))
         using (var writeStream = new StreamWriter(outputFilePath))
         {
             var el = new Elevator(0, 10);
