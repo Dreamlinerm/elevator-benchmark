@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj": {}
+    "C:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj": {
+    "C:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj",
+        "projectUniqueName": "C:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj",
         "projectName": "ConsoleApp1",
-        "projectPath": "c:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj",
+        "projectPath": "C:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\ConsoleApp1.csproj",
         "packagesPath": "C:\\Users\\Marvin\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\obj\\",
+        "outputPath": "C:\\Users\\Marvin\\Documents\\Programmieren\\elevator-benchmark\\solutions\\ConsoleApp1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -60,12 +60,31 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[9.0.0, 9.0.0]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[9.0.0, 9.0.0]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[9.0.0, 9.0.0]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win-x64": {
+          "#import": []
         }
       }
     }

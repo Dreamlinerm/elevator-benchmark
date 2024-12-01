@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 class Elevator
 {
@@ -18,11 +19,11 @@ class Elevator
         this.Output = string.Empty;
     }
 
-    public void ProcessChunk(string chunk)
+    public void ProcessChunk(char[] buffer, int charsRead)
     {
-        foreach (char instruction in chunk)
+        for (int i = 0; i < charsRead; i++)
         {
-            ProcessInstruction(instruction);
+            ProcessInstruction(buffer[i]);
         }
     }
 
@@ -101,30 +102,31 @@ class Elevator
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        const int chunkSize = 1000; // Adjust the chunk size as needed
+        const int bufferSize = 4096; // Adjust the chunk size as needed
         string inputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\input.txt";
         string outputFilePath = @"C:\Users\Marvin\Documents\Programmieren\elevator-benchmark\output.txt";
 
-        using (var readStream = new StreamReader(inputFilePath))
+        byte[] fileBytes = File.ReadAllBytes(inputFilePath);
+
+        using (var memoryStream = new MemoryStream(fileBytes))
+        using (var readStream = new StreamReader(memoryStream))
         using (var writeStream = new StreamWriter(outputFilePath))
         {
             var el = new Elevator(0, 10);
-            char[] buffer = new char[chunkSize];
-            int bytesRead;
-
-            while ((bytesRead = readStream.Read(buffer, 0, chunkSize)) > 0)
+            char[] buffer = new char[bufferSize];
+            int charsRead;
+            var memoryBuffer = buffer.AsMemory(0, bufferSize);
+            while ((charsRead = await readStream.ReadAsync(memoryBuffer)) > 0)
             {
-                string chunk = new string(buffer, 0, bytesRead);
-                el.ProcessChunk(chunk);
-                writeStream.Write(el.Output);
+                el.ProcessChunk(buffer, charsRead);
+                await writeStream.WriteAsync(el.Output);
                 el.Output = string.Empty; // Clear the output after writing
                                           // Console.WriteLine(el.Output); // Uncomment to see the output in the console
-                Console.WriteLine("Processing...");
             }
 
-            writeStream.Write(el.Output); // Write any remaining output
+            await writeStream.WriteAsync(el.Output); // Write any remaining output
         }
     }
 }
