@@ -8,7 +8,6 @@ typedef struct
     int floor_max;
     int on_floor;
     int door_status; // 1 for closed, 0 for open
-    char output[1024];
 } Elevator;
 
 void processInstruction(Elevator *el, char instruction);
@@ -26,11 +25,6 @@ void moveUp(Elevator *el)
     if (el->door_status && el->on_floor < el->floor_max)
     {
         el->on_floor += 1;
-        sprintf(el->output + strlen(el->output), "%d", el->on_floor);
-    }
-    else
-    {
-        strcat(el->output, "f");
     }
 }
 
@@ -39,11 +33,6 @@ void moveDown(Elevator *el)
     if (el->door_status && el->on_floor > el->floor_min)
     {
         el->on_floor -= 1;
-        sprintf(el->output + strlen(el->output), "%d", el->on_floor);
-    }
-    else
-    {
-        strcat(el->output, "f");
     }
 }
 
@@ -52,11 +41,6 @@ void openDoor(Elevator *el)
     if (el->door_status)
     {
         el->door_status = 0;
-        strcat(el->output, "o");
-    }
-    else
-    {
-        strcat(el->output, "f");
     }
 }
 
@@ -65,11 +49,6 @@ void closeDoor(Elevator *el)
     if (!el->door_status)
     {
         el->door_status = 1;
-        strcat(el->output, "c");
-    }
-    else
-    {
-        strcat(el->output, "f");
     }
 }
 
@@ -104,31 +83,16 @@ int main()
         return EXIT_FAILURE;
     }
 
-    // Get the file size
-    fseek(inputFile, 0, SEEK_END);
-    long fileSize = ftell(inputFile);
-    fseek(inputFile, 0, SEEK_SET);
+    Elevator el = {0, 10, 0, 1};
+    char chunk[1024];
 
-    // Allocate memory for the entire file
-    char *fileContent = (char *)malloc(fileSize + 1);
-    if (fileContent == NULL)
+    while (fgets(chunk, sizeof(chunk), inputFile) != NULL)
     {
-        perror("Error allocating memory");
-        fclose(inputFile);
-        fclose(outputFile);
-        return EXIT_FAILURE;
+        processChunk(&el, chunk);
+        // write floorstatus and doorstatus to output
+        fprintf(outputFile, "%d %d\n", el.on_floor, el.door_status);
     }
 
-    // Read the entire file into memory
-    fread(fileContent, 1, fileSize, inputFile);
-    fileContent[fileSize] = '\0'; // Null-terminate the string
-
-    Elevator el = {0, 10, 0, 1, ""};
-    processChunk(&el, fileContent);
-    fprintf(outputFile, "%s", el.output);
-
-    // Clean up
-    free(fileContent);
     fclose(inputFile);
     fclose(outputFile);
 
