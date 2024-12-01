@@ -89,9 +89,9 @@ int main()
     while (fgets(chunk, sizeof(chunk), inputFile) != NULL)
     {
         processChunk(&el, chunk);
-        // write floorstatus and doorstatus to output
-        fprintf(outputFile, "%d %d\n", el.on_floor, el.door_status);
     }
+    // write floorstatus and doorstatus to output
+    fprintf(outputFile, "%d %d\n", el.on_floor, el.door_status);
 
     fclose(inputFile);
     fclose(outputFile);
