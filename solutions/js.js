@@ -84,6 +84,10 @@ const el = new Elevator(0, 10);
 
 readStream.on("data", (chunk) => {
   el.processChunk(chunk);
+  writeStream.write(el.output, (err) => {
+    if (err) throw err;
+  });
+  el.output = ""; // Clear the output after writing
 });
 
 readStream.on("end", () => {
