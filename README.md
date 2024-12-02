@@ -25,9 +25,7 @@ ReadLargeDataset and parse instructions
 
 ## Output format
 
-- Ouput floor moved to: Number
-- Output door status: o/c
-- Output invalid instruction: f
+- Ouput floor and door status
 
 ## Examples
 
@@ -38,7 +36,7 @@ udddcccucccccocddddccuuuuoduucduoducoddc
 
 Output:
 ```
-10fffff1fffffoc0fffff1234offfc34offcoffc
+7 false
 ```
 
 ## Time execution
